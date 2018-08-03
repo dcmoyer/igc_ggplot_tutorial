@@ -15,6 +15,15 @@ Presentation Objectives
 - Makes nice plots (...and that's what we all wanted right?)
 - Related to some useful data-reshaping packages.
 
+In other news:
+
+- This is my first time using Rpres, which are markdown slides. I don't really have full control over them yet.
+- All the figures here are generated in the same code as the slides themselves.
+- You can find them [here in this git repo](https://github.com/dcmoyer/igc_ggplot_tutorial).
+- Or you can clone it yourself using:
+```{bash, eval=FALSE}
+    git clone https://github.com/dcmoyer/igc_ggplot_tutorial
+```
 The Grammar of Graphics
 ========================================================
 
@@ -26,6 +35,23 @@ The Grammar of Graphics
 - `ggplot2` is Object Oriented, with a plot object manipulated by member functions
 - Corollary: Usually viewport agnostic (doesn't need a screen to make a plot!)
 - It is imperfect.
+- NO SURFACES =`(
+
+Why code your plots?
+=======================================================
+>The strongest tool in science today is Ctrl-C + Ctrl-V.
+>
+> -Hadley Wickham, paraphrased
+
+<br />
+
+>The most useful tool in science tomorrow is git reset, followed by Ctrl-Z.
+>
+> -Probably Future Me
+
+***
+
+![Copy Pasta](copy_paste.jpg)
 
 Data to play with
 ========================================================
@@ -50,6 +76,8 @@ pairs(quakes,cex.labels=6)
 Adding a few columns to quakes
 ========================================================
 ```{r}
+#library(readr)
+#df_fab <- read_csv("my_repo/my_example.csv")
 quakes_df <- quakes
 
 km_output <- kmeans(quakes[,c("lat","long")], centers = 2)
@@ -61,6 +89,13 @@ quakes_df$rand_label <- factor(random_labels)
 km_output <- kmeans(quakes[,c("lat","long","depth")], centers = 4)
 quakes_df$kd <- factor(km_output[["cluster"]])
 ```
+
+Adding a few columns to quakes
+========================================================
+```{r}
+head(quakes_df)
+```
+
 
 Scatter plots
 ========================================================
@@ -98,14 +133,16 @@ left: 50%
 ```{r,eval=FALSE}
 #
 # making a plot?
-p <- ggplot(data=quakes_df,
-    mapping=aes(x=lat,y=long)) # aes!
+p <- ggplot(
+    data=quakes_df,
+    mapping=aes(x=long,y=lat) # aes!
+  ) 
 p
 ```
 
 ***
 ```{r, echo=FALSE, fig.height=15, fig.width=15,out.width="1280px",out.height="1280px"}
-p <- ggplot(data=quakes_df, aes(x=lat,y=long))
+p <- ggplot(data=quakes_df, aes(x=long,y=lat))
 p
 ```
 
@@ -116,15 +153,17 @@ left: 50%
 ```{r,eval=FALSE}
 #
 # making a plot
-p <- ggplot(data=quakes_df,
-    mapping=aes(x=lat,y=long)) +
+p <- ggplot(
+    data=quakes_df,
+    mapping=aes(x=long,y=lat)
+  ) +
   geom_point() # geom!
 p
 ```
 
 ***
 ```{r, echo=FALSE, fig.height=15, fig.width=15,out.width="1280px",out.height="1280px"}
-p <- ggplot(data=quakes_df, aes(x=lat,y=long))
+p <- ggplot(data=quakes_df, aes(x=long,y=lat))
 p <- p + geom_point()
 p
 ```
@@ -136,8 +175,10 @@ left: 50%
 ```{r,eval=FALSE}
 #
 # making a plot
-p <- ggplot(data=quakes_df,
-    mapping=aes(x=lat,y=long)) +
+p <- ggplot(
+    data=quakes_df,
+    mapping=aes(x=long,y=lat)
+  ) +
   geom_point() +
   theme_grey(base_size=60) # theme!
 p
@@ -145,7 +186,10 @@ p
 
 ***
 ```{r, echo=FALSE, fig.height=15, fig.width=15,out.width="1280px",out.height="1280px"}
-p <- ggplot(data=quakes_df, aes(x=lat,y=long)) +
+p <- ggplot(
+    data=quakes_df,
+    aes(x=long,y=lat)
+  ) +
   theme_grey(base_size=60) + 
   geom_point()
 p
@@ -159,8 +203,13 @@ left: 50%
 ```{r,eval=FALSE}
 #
 # making a plot
-p <- ggplot(data=quakes_df, # added color
-    mapping=aes(x=lat, y=long, color=k2)) +
+p <- ggplot(
+    data=quakes_df, 
+    mapping=aes(
+      x=long,
+      y=lat,
+      color=k2) # added color
+    ) +
   geom_point() +
   theme_grey(base_size=60)
 p
@@ -168,7 +217,7 @@ p
 
 ***
 ```{r, echo=FALSE, fig.height=15, fig.width=15,out.width="1280px",out.height="1280px"}
-p <- ggplot(data=quakes_df, aes(x=lat,y=long, color=k2)) +
+p <- ggplot(data=quakes_df, aes(x=long,y=lat, color=k2)) +
   theme_grey(base_size=60) +
   geom_point()
 p
@@ -179,22 +228,34 @@ Scatter plots: Messing with the little stuff
 left: 50%
 
 ```{r,eval=FALSE}
-p <- ggplot(data=quakes_df,
-    mapping=aes(x=lat,y=long,color=k2)) +
+p <- ggplot(
+    data=quakes_df,
+    mapping=aes(
+      x=long,
+      y=lat,
+      color=k2
+    )
+  ) +
   theme_grey(base_size=60) +
   geom_point() + 
-  guides(color=guide_legend(
-    title="K-Means") # title of legend
+  guides(
+    color=guide_legend(
+      title="K-Means"
+    ) # title of legend
   )
 p
 ```
 
 ***
 ```{r, echo=FALSE, fig.height=15, fig.width=15,out.width="1280px",out.height="1280px"}
-p <- ggplot(data=quakes_df,
-    mapping=aes(x=lat,
-      y=long,
-      color=k2)) +
+p <- ggplot(
+    data=quakes_df,
+    mapping=aes(
+      x=long,
+      y=lat,
+      color=k2
+    )
+  ) +
   geom_point() + 
   theme_grey(base_size=60) +
   guides(color=guide_legend(
@@ -208,12 +269,18 @@ Scatter plots: Messing with the little stuff
 left: 50%
 
 ```{r,eval=FALSE}
-p <- p + #adding more stuff to my plot
-  theme(legend.position=c(0.2,0.2),
-    legend.title = element_text(size=40),
-    legend.text = element_text(size=30)) +
+p <- p + #adding more stuff
+  theme(
+    legend.position=
+      c(0.2,0.2),
+    legend.title =
+      element_text(size=40),
+    legend.text =
+      element_text(size=30)
+  ) +
   scale_color_manual(
-    labels = c("Cluster 1", "Cluster 2"),
+    labels =
+      c("Cluster 1", "Cluster 2"),
     values=c("#f8766d", "#00b0f6"))
 p
 ```
@@ -233,6 +300,7 @@ p
 
 Short review
 =====
+
 What we've got so far:
 
 - ggplot object
@@ -242,6 +310,17 @@ What we've got so far:
 - themes
 - scales (a little)
 - Plots can be code!
+
+****
+Useful function:
+```{r,eval=FALSE}
+#The actual save line from Fab/my last paper.
+ggsave(
+  filename = "~/Documents/sipaim_plot.png",
+  plot = p,
+  width = 6, height = 6)
+```
+
 
 Let's plot something else!
 =====
@@ -256,11 +335,13 @@ Density Plots
 left: 50%
 
 ```{r,eval=FALSE}
-p <- ggplot(data=quakes_df,
+p <- ggplot(
+    data=quakes_df,
     mapping=aes(
       x=depth, # now using depth
-      color=k2) # color still grouping
-    ) +
+      color=k2
+    ) # color still grouping
+  ) +
   geom_density() + # density instead of point
   ...other legend stuff # same as before
 p
@@ -290,11 +371,13 @@ Density Plots: BW Theme (my favorite)
 left: 50%
 
 ```{r,eval=FALSE}
-p <- ggplot(data=quakes_df,
+p <- ggplot(
+    data=quakes_df,
     mapping=aes(
       x=depth,
-      color=k2)
-    ) +
+      color=k2
+    )
+  ) +
   theme_bw(base_size=60) + # change to bw
   geom_density() +
   ...other legend stuff
@@ -325,12 +408,13 @@ Density Plots: Fill vs. Color
 left: 50%
 
 ```{r,eval=FALSE}
-p <- ggplot(data=quakes_df,
+p <- ggplot(
+    data=quakes_df,
     mapping=aes(
       x=depth,
-      fill=k2) # change to fill
-    ) +
-  theme_bw(base_size=60) +
+      fill=k2
+    ) # change to fill
+  ) +
   geom_density() +
   ...other legend stuff
 p
@@ -360,12 +444,13 @@ Density Plots -- Alpha/Opacity
 left: 50%
 
 ```{r,eval=FALSE}
-p <- ggplot(data=quakes_df,
+p <- ggplot(
+    data=quakes_df,
     mapping=aes(
       x=depth,
-      fill=k2)
-    ) +
-  theme_bw(base_size=60) +
+      fill=k2
+    )
+  ) +
   geom_density(alpha=0.2) + # add alpha
   ...other legend stuff
 p
@@ -396,11 +481,13 @@ Facet Grid
 left: 50%
 
 ```{r,eval=FALSE}
-p <- ggplot(data=quakes_df,
+p <- ggplot(
+    data=quakes_df,
     mapping=aes(
       x=depth,
-      fill=k2)
-    ) +
+      fill=k2
+    )
+  ) +
   theme_bw(base_size=60) +
   geom_density(alpha=0.2) +
   facet_grid(k2 ~ .) + #facet grid
@@ -540,12 +627,477 @@ p <- ggplot(data=quakes_df,
 p
 ```
 
+Giant list of geoms
+======
+[Here's a list of geom_X functions.](https://ggplot2.tidyverse.org/reference/#section-layer-geoms)
+
+- There are lots and they're mostly pretty nice.
+- They all include example code.
+- There are also `stat_X` functions, which transform data, and `position_X` functions, which change positions
+
+***
+
+Useful function
+```{r, eval=FALSE}
+library(reshape2)
+
+#if you have rows of subj
+#with columns of measures
+#and ggplot wants each column
+#as a factor level
+data_with_col_as_one_factor <-
+  melt(data_with_columns)
+```
+
+Box Plots
+======
+
+```{r,eval=FALSE}
+p <- ggplot(data=quakes_df,
+    mapping=aes(
+      x=rand_label,
+      y=lat,
+      fill=k2) #third label
+    ) +
+  geom_boxplot() +
+  ...other legend stuff
+p
+```
+
+***
+```{r, echo=FALSE, fig.height=15, fig.width=15,out.width="1280px",out.height="1280px"}
+p <- ggplot(data=quakes_df,
+    mapping=aes(x=rand_label,
+      y=lat,
+      fill=k2)) +
+  theme_bw(base_size=50) +
+  geom_boxplot() + 
+  theme(legend.position="bottom",
+    legend.title = element_text(size=40),
+    legend.text = element_text(size=30))
+p
+```
+
+Box Plots: Horizontal isn't as intuitive as it should be!
+======
+
+```{r,eval=FALSE}
+p <- ggplot(data=quakes_df,
+    mapping=aes(
+      x=lat,
+      y=rand_label,
+      fill=k2) #third label
+    ) +
+  geom_boxplot() +
+  ...other legend stuff
+p
+```
+
+***
+```{r, echo=FALSE, fig.height=15, fig.width=15,out.width="1280px",out.height="1280px"}
+p <- ggplot(data=quakes_df,
+    mapping=aes(x=lat,
+      y=rand_label,
+      fill=k2)) +
+  theme_bw(base_size=50) +
+  geom_boxplot() + 
+  theme(legend.position="bottom",
+    legend.title = element_text(size=40),
+    legend.text = element_text(size=30))
+p
+```
+
+Box Plots: Horizontal ugly, but matches physical reality
+======
+
+```{r,eval=FALSE}
+p <- ggplot(data=quakes_df,
+    mapping=aes(
+      x=rand_label,
+      y=lat,
+      fill=k2) #third label
+    ) +
+  geom_boxplot() +
+  coord_flip() +
+  ...other legend stuff
+p
+```
+
+***
+```{r, echo=FALSE, fig.height=15, fig.width=15,out.width="1280px",out.height="1280px"}
+p <- ggplot(data=quakes_df,
+    mapping=aes(x=rand_label,
+      y=lat,
+      fill=k2)) +
+  theme_bw(base_size=50) +
+  geom_boxplot() + 
+  theme(legend.position="bottom",
+    legend.title = element_text(size=40),
+    legend.text = element_text(size=30)) +
+  coord_flip()
+p
+```
+From [this stack overflow](https://stackoverflow.com/questions/12626687/positioning-horizontal-boxplots-in-ggplot2).
+
+Jitter + Box Plots
+======
+
+```{r,eval=FALSE}
+p <- ggplot(data=quakes_df,
+    mapping=aes(
+      x=k2,
+      y=lat) #third label
+    ) +
+  geom_boxplot() +
+  geom_jitter() +
+  ...other legend stuff
+p
+```
+
+***
+```{r, echo=FALSE, fig.height=15, fig.width=15,out.width="1280px",out.height="1280px"}
+p <- ggplot(data=quakes_df,
+    mapping=aes(x=k2,
+      y=lat)) +
+  theme_bw(base_size=50) +
+  geom_boxplot() + 
+  geom_jitter()
+p
+```
+
+Quantile plot
+======
+
+```{r,eval=FALSE}
+p <- ggplot(data=quakes_df,
+    mapping=aes(
+      x=stations,
+      y=mag) #third label
+    ) +
+  geom_quantile() +
+  geom_point() +
+  ...other legend stuff
+p
+```
+
+
+***
+```{r, echo=FALSE, fig.height=15, fig.width=15,out.width="1280px",out.height="1280px"}
+p <- ggplot(data=quakes_df,
+    mapping=aes(
+      x=stations,
+      y=mag) #third label
+    ) +
+  geom_quantile() +
+  geom_point() +
+  theme_bw(base_size=50)
+p
+```
+
+Smoothed Line with approximate standard error plot
+======
+
+```{r,eval=FALSE}
+p <- ggplot(data=quakes_df,
+    mapping=aes(
+      x=stations,
+      y=mag) #third label
+    ) +
+  geom_smooth() +
+  geom_point() +
+  ...other legend stuff
+p
+```
+Warning: the smoothing may not be appropriate in all settings.
+
+***
+```{r, echo=FALSE, fig.height=15, fig.width=15,out.width="1280px",out.height="1280px"}
+p <- ggplot(data=quakes_df,
+    mapping=aes(
+      x=stations,
+      y=mag) #third label
+    ) +
+  geom_smooth() +
+  geom_point() +
+  theme_bw(base_size=50)
+p
+```
+
+Scatter + Continuous Scale
+======
+
+```{r,eval=FALSE}
+p <- ggplot(data=quakes_df,
+    mapping=aes(
+      x=k2,
+      y=lat,
+      color=depth) #third label
+    ) +
+  geom_point() +
+  scale_color_continuous(high = "#132B43", low = "#56B1F7") +
+  guides(color=guide_colorbar(
+    title.position = "bottom",
+    barwidth = 2, barheight = 20,
+    reverse=TRUE)
+  ) +
+  ...other legend stuff
+p
+```
+From [this other stack overflow](https://stackoverflow.com/questions/43515112/reversing-default-scale-gradient-ggplot2).
+
+
+***
+```{r, echo=FALSE, fig.height=15, fig.width=15,out.width="1280px",out.height="1280px"}
+p <- ggplot(data=quakes_df,
+    mapping=aes(x=long,
+      y=lat,
+      color=depth)) +
+  theme_bw(base_size=50) +
+  geom_point() +
+  theme(legend.position="right",
+    legend.title = element_text(size=40),
+    legend.text = element_text(size=30)) +
+  scale_color_continuous(high = "#132B43", low = "#56B1F7") +
+  guides(
+    color=guide_colorbar(
+      title.position = "bottom",
+      barwidth = 2,
+      barheight = 20,
+      reverse=TRUE
+    )
+  )
+p
+```
+
+2d Count Bins
+======
+
+```{r,eval=FALSE}
+p <- ggplot(data=quakes_df,
+    mapping=aes(
+      x=k2,
+      y=lat) #third label
+    ) +
+  stat_bin2d() +
+  ...other legend stuff
+p
+```
+
+***
+```{r, echo=FALSE, fig.height=15, fig.width=15,out.width="1280px",out.height="1280px"}
+p <- ggplot(data=quakes_df,
+    mapping=aes(x=long,
+      y=lat)) +
+  theme_bw(base_size=50) +
+  stat_bin2d() +
+  theme(legend.position="right",
+    legend.title = element_text(size=40),
+    legend.text = element_text(size=30)) +
+  scale_color_continuous(high = "#132B43", low = "#56B1F7") +
+  guides(
+    color=guide_colorbar(
+      title.position = "bottom",
+      barwidth = 2,
+      barheight = 20,
+      reverse=TRUE
+    )
+  )
+p
+```
+
+2d Density
+======
+
+```{r,eval=FALSE}
+p <- ggplot(data=quakes_df,
+    mapping=aes(
+      x=k2,
+      y=lat) #third label
+    ) +
+  stat_density_2d() +
+  ...other legend stuff
+p
+```
+
+***
+```{r, echo=FALSE, fig.height=15, fig.width=15,out.width="1280px",out.height="1280px"}
+p <- ggplot(data=quakes_df,
+    mapping=aes(x=long,
+      y=lat)) +
+  theme_bw(base_size=50) +
+  stat_density_2d() +
+  theme(legend.position="right",
+    legend.title = element_text(size=40),
+    legend.text = element_text(size=30)) +
+  scale_color_continuous(high = "#132B43", low = "#56B1F7") +
+  guides(
+    color=guide_colorbar(
+      title.position = "bottom",
+      barwidth = 2,
+      barheight = 20,
+      reverse=TRUE
+    )
+  )
+p
+```
+
+
+
+2d Density with fill
+======
+
+```{r,eval=FALSE}
+p <- ggplot(data=quakes_df,
+    mapping=aes(
+      x=long,
+      y=lat) #third label
+    ) +
+  stat_density_2d(aes(fill = ..level..),
+    geom="polygon", alpha = 0.4) +
+  ...other legend stuff
+p
+```
+From [this](https://stackoverflow.com/questions/21802253/how-to-plot-a-heat-map-on-a-spatial-map) and [this](https://stackoverflow.com/questions/32206623/what-does-level-mean-in-ggplotstat-density2d), also stack overflow, and then [this tidyverse link](https://ggplot2.tidyverse.org/reference/geom_density_2d.html).
+
+
+***
+```{r, echo=FALSE, fig.height=15, fig.width=15,out.width="1280px",out.height="1280px"}
+p <- ggplot(data=quakes_df,
+    mapping=aes(x=long,
+      y=lat)) +
+  theme_bw(base_size=50) +
+  stat_density_2d(aes(fill = ..level..),
+    geom="polygon", alpha = 0.4) +
+  theme(legend.position="right",
+    legend.title = element_text(size=40),
+    legend.text = element_text(size=30)) +
+  guides(
+    fill=guide_colorbar(
+      title.position = "bottom",
+      barwidth = 2,
+      barheight = 20,
+    )
+  )
+p
+```
+
+2d Density with fill
+======
+
+```{r,eval=FALSE}
+p <- ggplot(data=quakes_df,
+    mapping=aes(
+      x=long,
+      y=lat) #third label
+    ) +
+  stat_density_2d(aes(fill = ..level..),
+    geom="polygon", alpha = 0.4) +
+  geom_point() +
+  ...other legend stuff
+p
+```
+From [this](https://stackoverflow.com/questions/21802253/how-to-plot-a-heat-map-on-a-spatial-map) and [this](https://stackoverflow.com/questions/32206623/what-does-level-mean-in-ggplotstat-density2d), also stack overflow, and then [this tidyverse link](https://ggplot2.tidyverse.org/reference/geom_density_2d.html).
+
+
+***
+```{r, echo=FALSE, fig.height=15, fig.width=15,out.width="1280px",out.height="1280px"}
+p <- ggplot(data=quakes_df,
+    mapping=aes(x=long,
+      y=lat)) +
+  theme_bw(base_size=50) +
+  stat_density_2d(aes(fill = ..level..),geom="polygon", alpha = 0.4) +
+  geom_point(color="red",alpha=0.4) +
+  theme(legend.position="right",
+    legend.title = element_text(size=40),
+    legend.text = element_text(size=30)) +
+  guides(
+    fill=guide_colorbar(
+      title.position = "bottom",
+      barwidth = 2,
+      barheight = 20,
+    )
+  )
+p
+```
+
+2d Density with fill
+======
+
+```{r,eval=FALSE}
+p <- ggplot(data=quakes_df,
+    mapping=aes(
+      x=long,
+      y=lat) #third label
+    ) +
+  stat_density_2d(aes(fill = ..level.., alpha = 0.4),
+    geom="polygon") +
+  geom_point() +
+  ...other legend stuff
+p
+```
+From [this](https://stackoverflow.com/questions/21802253/how-to-plot-a-heat-map-on-a-spatial-map) and [this](https://stackoverflow.com/questions/32206623/what-does-level-mean-in-ggplotstat-density2d), also stack overflow, and then [this tidyverse link](https://ggplot2.tidyverse.org/reference/geom_density_2d.html).
+
+
+***
+```{r, echo=FALSE, fig.height=15, fig.width=15,out.width="1280px",out.height="1280px"}
+p <- ggplot(data=quakes_df,
+    mapping=aes(x=long,
+      y=lat)) +
+  theme_bw(base_size=50) +
+  stat_density_2d(aes(fill = ..level..),geom="polygon", alpha = 0.4) +
+  geom_point(color="red",alpha=0.4) +
+  theme(legend.position="right",
+    legend.title = element_text(size=40),
+    legend.text = element_text(size=30)) +
+  guides(
+    fill=guide_colorbar(
+      title.position = "bottom",
+      barwidth = 2,
+      barheight = 20,
+    )
+  )
+p
+```
+
+
+
+Other stuff
+========
+type: section
+which might be useful (sometimes, in my opinion, upon occasion)
+
 Colors, and why jet sucks
 ===============
+Jet and Grey Scale:
 
-Let's talk about actually doing things
+![Yikes](jet_and_gs.png)
+
+It's about Luminance!
+
+***
+
+Cubehelix and Grey Scale:
+
+![Noice](cubehelix_and_gs.png)
+
+(stolen from Jake [Vanderplas' blog](http://jakevdp.github.io/blog/2014/10/16/how-bad-is-your-colormap/))
+
+Palette town
+=====
+
+From [this cookbook-r](http://www.cookbook-r.com/Graphs/Colors_%28ggplot2%29/#palettes-color-brewer) page, there are a ton of color palettes to use in ggplot.
+
+- The RColorBrewer package is really useful, but I usually just copy and paste from stack overflow to use it.
+- ...wacky colorschemes exist, like this set of [Wes Anderson movie palettes](https://github.com/karthik/wesanderson).
+
+***
+
+![Colors!](colorbrewer.png)
+
+Easy things we can talk about but didn't because it's not ggplot2
 ===============
 
-- Loading in data
+- Loading in data (...use the gui once, then copy paste the code.)
 - Scripting your plotting! (And processing)
+- Using functions for adding things to your plots (OwO)
 - Other stuff?
